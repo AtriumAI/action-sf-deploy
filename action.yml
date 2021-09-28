@@ -1,9 +1,10 @@
-name: 'sfdx-ci'
-description: 'Use sfdx/sfpowerkit to run a check only deployment'
+name: 'sfdx-cicd'
+description: 'Use sfdx/sfpowerkit to validate or deploy a diff deploy'
 inputs:
-  action:
-    description: 'What action to perform'
-    required: false
+  validate-only:
+    description: 'When pushing to org, should we only validate or actually deploy'
+    required: true
+    default: true
   sfdx-auth-url:
     description: 'SFDX Login url for org'
     required: true
@@ -15,12 +16,52 @@ inputs:
     description: 'Target revision to generate the diff'
     required: true
     default: 'HEAD'
+  api-version:
+    description: 'SF API version to use during validate/deploy'
+    default: '51.0'
 
 runs:
-  using: 'docker'
-  image: 'docker://atriumai/sfdx-ci'
-  args:
-    - '--action=${{inputs.action}}'
-    - '--sfdx-auth-url=${{inputs.sfdx-auth-url}}'
-    - '--revision-from=${{inputs.revision-from}}'
-    - '--revision-to=${{inputs.revision-to}}'
+  using: 'composite'
+  steps:
+    # Checkout full repo, needed to do diff
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    
+    # Using stable version
+    - name: Install SFDX CLI
+      run: |
+        wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
+        mkdir sfdx-cli
+        tar xJf sfdx-linux-amd64.tar.xz -C sfdx-cli --strip-components 1
+        ./sfdx-cli/install
+
+    - name: Install SFPowerkit
+      run: echo 'y' | sfdx plugins:install sfpowerkit
+    
+    - name: Set validate/deploy flag
+      run: VALIDATE_FLAG=$(( ${{ inputs.validate-only }} ? '-c' : '' ))
+      
+    - name: Echo validate flag
+      run: echo $VALIDATE_FLAG
+    
+    # SFDX needs this file to auth
+    - name: Create auth file from secret
+      run: echo ${{ input.sfdx-auth-url }} > SFDX_AUTH
+      
+    - name: Auth SF Org
+      run: sfdx force:auth:sfdxurl:store -f SFDX_AUTH -s -a SFOrg
+      
+    - name: Diff repo with Org
+      run: sfdx sfpowerkit:project:diff -r {{ inputs.revision-from }} -t {{ inputs.revision-to }} -d diffdeploy
+
+    - name: Validate deploy
+      run: sfdx force:source:deploy -p diffdeploy/force-app -u SFOrg --json --loglevel fatal -c --apiversion={{ inputs.api-version }}
+    
+    
+  
+#   args:
+#     - '--action=${{inputs.action}}'
+#     - '--sfdx-auth-url=${{inputs.sfdx-auth-url}}'
+#     - '--revision-from=${{inputs.revision-from}}'
+#     - '--revision-to=${{inputs.revision-to}}'
