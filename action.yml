@@ -30,6 +30,7 @@ runs:
     
     # Using stable version
     - name: Install SFDX CLI
+      shell: bash
       run: |
         wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
         mkdir sfdx-cli
@@ -37,25 +38,32 @@ runs:
         ./sfdx-cli/install
 
     - name: Install SFPowerkit
+      shell: bash
       run: echo 'y' | sfdx plugins:install sfpowerkit
     
     - name: Set validate/deploy flag
+      shell: bash
       run: VALIDATE_FLAG=$(( ${{ inputs.validate-only }} ? '-c' : '' ))
       
     - name: Echo validate flag
+      shell: bash
       run: echo $VALIDATE_FLAG
     
     # SFDX needs this file to auth
     - name: Create auth file from secret
+      shell: bash
       run: echo ${{ input.sfdx-auth-url }} > SFDX_AUTH
       
     - name: Auth SF Org
+      shell: bash
       run: sfdx force:auth:sfdxurl:store -f SFDX_AUTH -s -a SFOrg
       
     - name: Diff repo with Org
+      shell: bash
       run: sfdx sfpowerkit:project:diff -r {{ inputs.revision-from }} -t {{ inputs.revision-to }} -d diffdeploy
 
     - name: Validate deploy
+      shell: bash
       run: sfdx force:source:deploy -p diffdeploy/force-app -u SFOrg --json --loglevel fatal -c --apiversion={{ inputs.api-version }}
     
     
