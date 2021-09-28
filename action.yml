@@ -35,12 +35,16 @@ runs:
         wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
         mkdir ~/sfdx-cli
         tar xJf sfdx-linux-x64.tar.xz -C ~/sfdx-cli --strip-components 1
+        echo "Path 1"
+        echo $PATH
         export PATH=~/sfdx-cli/bin:$PATH
+        echo "Path 2"
+        echo $PATH
     
     - name: Echo path
       shell: bash
       run: |
-        echo "Echoing path"
+        echo "Path 3"
         echo $PATH
 
     - name: Install SFPowerkit
