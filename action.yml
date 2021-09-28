@@ -57,7 +57,7 @@ runs:
     # SFDX needs this file to auth
     - name: Create auth file from secret
       shell: bash
-      run: echo ${{ input.sfdx-auth-url }} > SFDX_AUTH
+      run: echo ${{ inputs.sfdx-auth-url }} > SFDX_AUTH
       
     - name: Auth SF Org
       shell: bash
