@@ -12,6 +12,7 @@ echo $PATH
 echo 'y' | sfdx plugins:install sfpowerkit
 
 # Echo test
+echo "Input validate only"
 echo $INPUT_VALIDATE_ONLY
 
 if [[ $INPUT_VALIDATE_ONLY = true ]]; then
@@ -24,6 +25,7 @@ echo "Validate flag"
 echo $VALIDATE_FLAG
 
 echo $INPUT_SFDX-AUTH-URL > sfdx_auth.txt
+cat sfdx_auth.txt
 
 sfdx force:auth:sfdxurl:store -f sfdx_auth.txt -s -a SFOrg
 
