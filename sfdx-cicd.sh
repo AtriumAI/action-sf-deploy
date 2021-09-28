@@ -13,7 +13,7 @@ echo 'y' | sfdx plugins:install sfpowerkit
 VALIDATE_ONLY=`echo $VALIDATE_ONLY | tr '[:upper:]' '[:lower:]'`
 if [[ $VALIDATE_ONLY = true ]]; then
   VALIDATE_FLAG='-c';
-elif [[ $VALIDATE_ONLY = false ]]
+elif [[ $VALIDATE_ONLY = false ]]; then
   VALIDATE_FLAG='';
 else
   echo "Bad Validate param...choose true or false"
