@@ -24,7 +24,7 @@ fi
 echo "Validate flag"
 echo $VALIDATE_FLAG
 
-echo $SFDX-AUTH-URL > sfdx_auth.txt
+echo $SFDX_AUTH_URL > sfdx_auth.txt
 cat sfdx_auth.txt
 
 sfdx force:auth:sfdxurl:store -f sfdx_auth.txt -s -a SFOrg
