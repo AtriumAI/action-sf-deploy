@@ -1,5 +1,5 @@
 # Download sfdx binary and setup
-wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
+wget -q https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
 mkdir ~/sfdx-cli
 tar xJf sfdx-linux-x64.tar.xz -C ~/sfdx-cli --strip-components 1
 echo "Path 1"
@@ -20,10 +20,15 @@ else
   VALIDATE_FLAG='';
 fi
 
-echo $INPUT_SFDX-AUTH-URL > SFDX_AUTH
+echo "Validate flag"
+echo $VALIDATE_FLAG
 
-sfdx force:auth:sfdxurl:store -f SFDX_AUTH -s -a SFOrg
+echo $INPUT_SFDX-AUTH-URL > sfdx_auth.txt
 
-sfdx sfpowerkit:project:diff -r {{ inputs.revision-from }} -t {{ inputs.revision-to }} -d diffdeploy
+sfdx force:auth:sfdxurl:store -f sfdx_auth.txt -s -a SFOrg
 
-sfdx force:source:deploy -p diffdeploy/force-app -u SFOrg --json --loglevel fatal -c --apiversion={{ inputs.api-version }}
+rm sfdx_auth.txt
+
+sfdx sfpowerkit:project:diff -r $INPUT_REVISION-FROM -t $INPUT_REVISION-TO -d diffdeploy
+
+sfdx force:source:deploy -p diffdeploy/force-app -u SFOrg --json --loglevel fatal -c --apiversion=$INPUT_API-VERION

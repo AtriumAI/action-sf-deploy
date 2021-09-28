@@ -4,7 +4,7 @@ inputs:
   validate-only:
     description: 'When pushing to org, should we only validate or actually deploy'
     required: true
-    default: true
+    default: 'true'
   sfdx-auth-url:
     description: 'SFDX Login url for org'
     required: true
