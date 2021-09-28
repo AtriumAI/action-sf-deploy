@@ -31,6 +31,6 @@ sfdx force:auth:sfdxurl:store -f sfdx_auth.txt -s -a SFOrg
 
 rm sfdx_auth.txt
 
-sfdx sfpowerkit:project:diff -r $REVISION-FROM -t $REVISION-TO -d diffdeploy
+sfdx sfpowerkit:project:diff -r $REVISION_FROM -t $REVISION_TO -d diffdeploy
 
-sfdx force:source:deploy -p diffdeploy/force-app -u SFOrg --json --loglevel fatal -c --apiversion=$API-VERSION
+sfdx force:source:deploy -p diffdeploy/force-app -u SFOrg --json --loglevel fatal -c --apiversion=$API_VERSION
