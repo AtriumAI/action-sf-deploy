@@ -31,6 +31,12 @@ runs:
 
     - run: ${{ github.action_path }}/sfdx-cicd.sh
       shell: bash
+      env:
+        VALIDATE_ONLY: ${{ inputs.validate-only }}
+        SFDX_AUTH_URL: ${{ inputs.sfdx-auth-url }}
+        REVISION_FROM: ${{ inputs.revision-from }}
+        REVISION_TO: ${{ inputs.revision-to }}
+        API_VERSION: ${{ inputs.api-version }}
     
     # # Using stable version
     # - name: Install SFDX CLI
