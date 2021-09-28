@@ -40,10 +40,15 @@ runs:
     - name: Install SFPowerkit
       shell: bash
       run: echo 'y' | sfdx plugins:install sfpowerkit
+      
+      
+    - name: Echo vars
+      shell: bash
+      run: echo $VALIDATE_ONLY
     
     - name: Set validate/deploy flag
       shell: bash
-      run: VALIDATE_FLAG=$(( ${{ inputs.validate-only }} ? '-c' : '' ))
+      run: if [[ $VALIDATE_ONLY = true ]]; then VALIDATE_FLAG='-c'; else VALIDATE_FLAG=''; fi
       
     - name: Echo validate flag
       shell: bash
