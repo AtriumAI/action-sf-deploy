@@ -1,0 +1,26 @@
+name: 'sfdx-ci'
+description: 'Use sfdx/sfpowerkit to run a check only deployment'
+inputs:
+  action:
+    description: 'What action to perform'
+    required: false
+  sfdx-auth-url:
+    description: 'SFDX Login url for org'
+    required: true
+  revision-from:
+    description: 'Base revision from where the diff is generated'
+    required: true
+    default: 'origin/main'
+  revision-to:
+    description: 'Target revision to generate the diff'
+    required: true
+    default: 'HEAD'
+
+runs:
+  using: 'docker'
+  image: 'docker://atriumai/sfdx-ci'
+  args:
+    - '-action=${{inputs.action}}'
+    - '-sfdx-auth-url=${{inputs.sfdx-auth-url}}'
+    - '-revision-from=${{inputs.revision-from}}'
+    - '-revision-to=${{inputs.revision-to}}'
