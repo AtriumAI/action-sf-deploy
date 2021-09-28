@@ -36,6 +36,12 @@ runs:
         mkdir ~/sfdx-cli
         tar xJf sfdx-linux-x64.tar.xz -C ~/sfdx-cli --strip-components 1
         export PATH=~/sfdx-cli/bin:$PATH
+    
+    - name: Echo path
+      shell: bash
+      run: |
+        echo "Echoing path"
+        echo $PATH
 
     - name: Install SFPowerkit
       shell: bash
