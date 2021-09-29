@@ -20,9 +20,6 @@ else
   exit 2
 fi
 
-echo "Validate flag"
-echo $VALIDATE_FLAG
-
 # Auth sfdx into org with auth url
 echo $SFDX_AUTH_URL > sfdx_auth.txt
 sfdx force:auth:sfdxurl:store -f sfdx_auth.txt -s -a SFOrg
