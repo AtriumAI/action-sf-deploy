@@ -20,6 +20,10 @@ inputs:
     description: 'SF API version to use during validate/deploy'
     required: true
     default: '51.0'
+  sfdx-download-url:
+    description: 'URL to download SFDX Linux client. Uses the XZ compressed version. Default is the stable version. Other version available at https://developer.salesforce.com/media/salesforce-cli/sfdx/versions/sfdx-linux-arm-tar-xz.json'
+    required: true
+    default: 'https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz'
 
 runs:
   using: 'composite'
@@ -37,63 +41,4 @@ runs:
         REVISION_FROM: ${{ inputs.revision-from }}
         REVISION_TO: ${{ inputs.revision-to }}
         API_VERSION: ${{ inputs.api-version }}
-    
-    # # Using stable version
-    # - name: Install SFDX CLI
-    #   shell: bash
-    #   run: |
-    #     wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
-    #     mkdir ~/sfdx-cli
-    #     tar xJf sfdx-linux-x64.tar.xz -C ~/sfdx-cli --strip-components 1
-    #     echo "Path 1"
-    #     echo $PATH
-    #     export PATH=~/sfdx-cli/bin:$PATH
-    #     echo "Path 2"
-    #     echo $PATH
-    
-    # - name: Echo path
-    #   shell: bash
-    #   run: |
-    #     echo "Path 3"
-    #     echo $PATH
-
-    # - name: Install SFPowerkit
-    #   shell: bash
-    #   run: echo 'y' | sfdx plugins:install sfpowerkit
-        
-    # - name: Echo vars
-    #   shell: bash
-    #   run: echo $VALIDATE_ONLY
-    
-    # - name: Set validate/deploy flag
-    #   shell: bash
-    #   run: if [[ $VALIDATE_ONLY = true ]]; then VALIDATE_FLAG='-c'; else VALIDATE_FLAG=''; fi
-      
-    # - name: Echo validate flag
-    #   shell: bash
-    #   run: echo $VALIDATE_FLAG
-    
-    # # SFDX needs this file to auth
-    # - name: Create auth file from secret
-    #   shell: bash
-    #   run: echo ${{ inputs.sfdx-auth-url }} > SFDX_AUTH
-      
-    # - name: Auth SF Org
-    #   shell: bash
-    #   run: sfdx force:auth:sfdxurl:store -f SFDX_AUTH -s -a SFOrg
-      
-    # - name: Diff repo with Org
-    #   shell: bash
-    #   run: sfdx sfpowerkit:project:diff -r {{ inputs.revision-from }} -t {{ inputs.revision-to }} -d diffdeploy
-
-    # - name: Validate deploy
-    #   shell: bash
-    #   run: sfdx force:source:deploy -p diffdeploy/force-app -u SFOrg --json --loglevel fatal -c --apiversion={{ inputs.api-version }}
-    
-    
-  
-#   args:
-#     - '--action=${{inputs.action}}'
-#     - '--sfdx-auth-url=${{inputs.sfdx-auth-url}}'
-#     - '--revision-from=${{inputs.revision-from}}'
-#     - '--revision-to=${{inputs.revision-to}}'
+        SFDX_DOWNLOAD_URL: ${{ inputs.sfdx-download-url }}

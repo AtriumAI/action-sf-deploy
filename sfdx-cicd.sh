@@ -2,7 +2,7 @@
 set -o errexit -o pipefail -o noclobber -o nounset
 
 # Download sfdx binary and setup
-wget -q https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
+wget -q $SFDX_DOWNLOAD_URL
 mkdir ~/sfdx-cli
 tar xJf sfdx-linux-x64.tar.xz -C ~/sfdx-cli --strip-components 1
 export PATH=~/sfdx-cli/bin:$PATH
