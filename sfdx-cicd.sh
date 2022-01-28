@@ -27,9 +27,11 @@ if [[ $TEST_LEVEL = 'runspecifiedtests' ]]; then
   TEST_LEVEL='--testlevel RunSpecifiedTests';
 elif [[ $TEST_LEVEL = 'runlocaltests' ]]; then
   TEST_LEVEL='--testlevel RunLocalTests';
+elif [[ $TEST_LEVEL = 'notestrun' ]]; then
+  TEST_LEVEL='--testlevel NoTestRun';
 else 
   TEST_LEVEL='';
-  echo "Setting testlevel to run RunNoTests"
+  echo "Setting testlevel to run org defaults. RunLocalTests for Prod, NoTestRun for Sandbox"
 fi
 
 SPECIFIED_TESTS=`echo $SPECIFIED_TESTS | tr -d ' '`
@@ -39,8 +41,6 @@ if [[ $TEST_LEVEL = '--testlevel RunSpecifiedTests' ]]; then
 else
   SPECIFIED_TESTS='';
 fi
-
-echo 'Test Level: ' $TEST_LEVEL 'specificTest: ' $SPECIFIED_TESTS
 
 # Auth sfdx into org with auth url
 echo $SFDX_AUTH_URL > sfdx_auth.txt
