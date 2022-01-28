@@ -5,6 +5,14 @@ inputs:
     description: 'When pushing to org, should we only validate or actually deploy'
     required: true
     default: 'true'
+  test-level:
+    description: 'When pushing to org, sets the level of tests that should run'
+    required: false
+    default: 'NoTests'
+  specified-tests:
+    description: 'When running tests on the target org, set specified tests to run'
+    required: false
+    default: ''
   sfdx-auth-url:
     description: 'SFDX Login url for org'
     required: true
@@ -37,6 +45,8 @@ runs:
       shell: bash
       env:
         VALIDATE_ONLY: ${{ inputs.validate-only }}
+        TEST_LEVEL: ${{ inputs.test-level }}
+        SPECIFIED_TESTS: ${{ inputs.specified-tests }}
         SFDX_AUTH_URL: ${{ inputs.sfdx-auth-url }}
         REVISION_FROM: ${{ inputs.revision-from }}
         REVISION_TO: ${{ inputs.revision-to }}
