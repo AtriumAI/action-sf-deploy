@@ -12,7 +12,6 @@ echo 'y' | sfdx plugins:install sfpowerkit
 
 
 VALIDATE_ONLY=`echo $VALIDATE_ONLY | tr '[:upper:]' '[:lower:]'`
-echo $VALIDATE_ONLY
 if [[ $VALIDATE_ONLY = true ]]; then
   VALIDATE_FLAG='-c';
 elif [[ $VALIDATE_ONLY = false ]]; then
@@ -35,7 +34,6 @@ else
 fi
 
 SPECIFIED_TESTS=`echo $SPECIFIED_TESTS | tr -d ' '`
-echo 'Test Level: ' $TEST_LEVEL 'specificTest: ' $SPECIFIED_TESTS
 if [[ $TEST_LEVEL = '--testlevel RunSpecifiedTests' ]]; then
   SPECIFIED_TESTS="--runtests $SPECIFIED_TESTS";
 else
