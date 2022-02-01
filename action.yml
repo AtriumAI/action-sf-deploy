@@ -5,6 +5,17 @@ inputs:
     description: 'When pushing to org, should we only validate or actually deploy'
     required: true
     default: 'true'
+  test-level:
+    description: 'When pushing to org, sets the level of tests that should run: RunLocalTests - run all tests minus
+      managed packed tests in target; RunSpecifiedTests - only runs the provided test classes; NoTestRun - no tests
+      run. Production requires test classes to run if Apex is deployed. For Dev blank is default-NoTestRun, Prod default-RunLocalTests'
+    required: false
+    default: ''
+  specified-tests:
+    description: 'When running tests on the target org, set specified tests to run only when test-level is RunSpecifiedTest. Must be a comma delimmited
+    list of Apex Classes'
+    required: false
+    default: ''
   sfdx-auth-url:
     description: 'SFDX Login url for org'
     required: true
@@ -37,6 +48,8 @@ runs:
       shell: bash
       env:
         VALIDATE_ONLY: ${{ inputs.validate-only }}
+        TEST_LEVEL: ${{ inputs.test-level }}
+        SPECIFIED_TESTS: ${{ inputs.specified-tests }}
         SFDX_AUTH_URL: ${{ inputs.sfdx-auth-url }}
         REVISION_FROM: ${{ inputs.revision-from }}
         REVISION_TO: ${{ inputs.revision-to }}
