@@ -29,20 +29,26 @@ inputs:
     default: 'HEAD'
   api-version:
     description: 'SF API version to use during validate/deploy'
-    required: true
-    default: '51.0'
-  sfdx-download-url:
-    description: 'URL to download SFDX Linux client. Uses the XZ compressed version. Default is the stable version. Other version available at https://developer.salesforce.com/media/salesforce-cli/sfdx/versions/sfdx-linux-arm-tar-xz.json'
-    required: true
-    default: 'https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz'
+    required: false
+    default: ''
 
 runs:
   using: 'composite'
   steps:
     # Checkout full repo, needed to do diff
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+    
+    # Checkout NPM
+    - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+
+    # Install dependencies (including sf cli)
+    - name: Install Dependencies
+        run: npm ci
 
     - run: ${{ github.action_path }}/sfdx-cicd.sh
       shell: bash
@@ -54,4 +60,3 @@ runs:
         REVISION_FROM: ${{ inputs.revision-from }}
         REVISION_TO: ${{ inputs.revision-to }}
         API_VERSION: ${{ inputs.api-version }}
-        SFDX_DOWNLOAD_URL: ${{ inputs.sfdx-download-url }}

@@ -1,54 +1,60 @@
 #!/bin/bash
 set -o errexit -o pipefail -o noclobber -o nounset
 
-# Download sfdx binary and setup
-wget -q $SFDX_DOWNLOAD_URL
-mkdir ~/sfdx-cli
-tar xJf sfdx-linux-x64.tar.xz -C ~/sfdx-cli --strip-components 1
-export PATH=~/sfdx-cli/bin:$PATH
-
 # Install sfpowerkit
-echo 'y' | sfdx plugins:install sfpowerkit
+echo 'y' | sf plugins install sfpowerkit
 
-
+# Set Validate_only flag
 VALIDATE_ONLY=`echo $VALIDATE_ONLY | tr '[:upper:]' '[:lower:]'`
 if [[ $VALIDATE_ONLY = true ]]; then
-  VALIDATE_FLAG='-c';
+  VALIDATE_FLAG='--dry-run'
 elif [[ $VALIDATE_ONLY = false ]]; then
-  VALIDATE_FLAG='';
+  VALIDATE_FLAG=''
 else
   echo "Bad Validate param...choose true or false"
   exit 2
 fi
 
+# Set Test_Level (or use org default)
 TEST_LEVEL=`echo $TEST_LEVEL | tr '[:upper:]' '[:lower:]'`
 if [[ $TEST_LEVEL = 'runspecifiedtests' ]]; then
-  TEST_LEVEL='--testlevel RunSpecifiedTests';
+  TEST_LEVEL='--test-level RunSpecifiedTests'
 elif [[ $TEST_LEVEL = 'runlocaltests' ]]; then
-  TEST_LEVEL='--testlevel RunLocalTests';
+  TEST_LEVEL='--test-level RunLocalTests'
 elif [[ $TEST_LEVEL = 'notestrun' ]]; then
-  TEST_LEVEL='--testlevel NoTestRun';
+  TEST_LEVEL='--test-level NoTestRun'
 else 
-  TEST_LEVEL='';
-  echo "Setting testlevel to run org defaults. RunLocalTests for Prod, NoTestRun for Sandbox"
+  TEST_LEVEL=''
+  echo "Setting test-level to run org defaults. RunLocalTests for Prod, NoTestRun for Sandbox"
 fi
 
+# If RunSpecifiedTests Test_Level, parse the tests requested
 SPECIFIED_TESTS=`echo $SPECIFIED_TESTS | tr -d ' '`
-if [[ $TEST_LEVEL = '--testlevel RunSpecifiedTests' ]]; then
-  SPECIFIED_TESTS="--runtests $SPECIFIED_TESTS";
+if [[ $TEST_LEVEL = '--test-level RunSpecifiedTests' ]]; then
+  SPECIFIED_TESTS="--tests $SPECIFIED_TESTS"
 else
-  SPECIFIED_TESTS='';
+  SPECIFIED_TESTS=''
 fi
+
+# Check if API_VERSION was specified
+if [[ $API_VERSION != '' ]]; then
+  API_VERSION="--api-version=$API_VERSION"
+fi
+
+# Set logging level
+SF_LOG_LEVEL='fatal'
 
 # Auth sfdx into org with auth url
+# Generate this with:
+#  sf org display --verbose --json (pass in sfdxAuthUrl value starting with force:// )
 echo $SFDX_AUTH_URL > sfdx_auth.txt
-sfdx force:auth:sfdxurl:store -f sfdx_auth.txt -s -a SFOrg
+sf org login sfdx-url --sfdx-url-file sfdx_auth.txt --set-default --alias SFOrg
 rm sfdx_auth.txt
 
-echo "sfdx diff command: sfdx sfpowerkit:project:diff -r $REVISION_FROM -t $REVISION_TO -d diffdeploy"
+echo "sfdx diff command: sf sfpowerkit project diff -r $REVISION_FROM -t $REVISION_TO -d diffdeploy"
 # Prepare diff
-sfdx sfpowerkit:project:diff -r $REVISION_FROM -t $REVISION_TO -d diffdeploy
+sf sfpowerkit project diff -r $REVISION_FROM -t $REVISION_TO -d diffdeploy
 
-echo "sfdx deploy command: sfdx force:source:deploy -p diffdeploy/force-app -u SFOrg --json --loglevel fatal $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS --apiversion=$API_VERSION"
+echo "sfdx deploy command: sf project deploy start --source-dir diffdeploy/force-app --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION"
 # Deploy diff
-sfdx force:source:deploy -p diffdeploy/force-app -u SFOrg --json --loglevel fatal $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS --apiversion=$API_VERSION
+sf project deploy start --source-dir diffdeploy/force-app --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION
