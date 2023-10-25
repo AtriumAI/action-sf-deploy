@@ -44,7 +44,8 @@ runs:
     - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "latest"
+          node-version: 'latest'
+          cache: 'npm'
 
     # Install dependencies (including sf cli)
     - name: Install Dependencies
