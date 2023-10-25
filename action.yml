@@ -47,9 +47,13 @@ runs:
           node-version: 'latest'
           cache: 'npm'
 
-    # Install dependencies (including sf cli)
+    # Install dependencies
     - name: Install Dependencies
-        run: npm ci
+      run: npm ci
+    
+    # Install salesforce CLI
+    -name: Install Salesforce CLI
+      run: npm install @salesforce/cli@latest --global
 
     - run: ${{ github.action_path }}/sfdx-cicd.sh
       shell: bash

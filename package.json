@@ -7,6 +7,5 @@
   },
   "private": true,
   "devDependencies": {
-    "@salesforce/cli": "^2.14.6"
   }
 }
