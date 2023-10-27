@@ -1,5 +1,6 @@
 #!/bin/bash
 set -o errexit -o pipefail -o noclobber -o nounset
+export PATH=($pwd)/node_modules/.bin:$PATH
 
 # Install sfpowerkit (only if missing)
 if [[ -z $(sf plugins | grep sfpowerkit) ]]; then
@@ -33,14 +34,6 @@ fi
 
 # Set Test_Level (or use org default)
 TEST_LEVEL=`echo $TEST_LEVEL | tr '[:upper:]' '[:lower:]'`
-
-# Override sandbox default (notestrun) if TEST_LEVEL not specified
-# but package contains test class changes
-if [[ -n $(find diffdeploy/ -name '*test.cls') ]] && [[ $TEST_LEVEL = '' ]]; then
-  # Test classes present; override to runlocaltests
-  TEST_LEVEL='runlocaltests'
-fi
-
 if [[ $TEST_LEVEL = 'runspecifiedtests' ]]; then
   TEST_LEVEL='--test-level RunSpecifiedTests'
 elif [[ $TEST_LEVEL = 'runlocaltests' ]]; then
