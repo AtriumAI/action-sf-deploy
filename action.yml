@@ -28,7 +28,10 @@ inputs:
     required: true
     default: 'HEAD'
   api-version:
-    description: 'SF API version to use during validate/deploy'
+    description: 'Metadata API version to use during retrieve/deploy (used only when sourceApiVersion is
+      not specified in your sfdx-project.json file). If sourceApiVersion IS specified in the sfdx-project.json
+      file, that value OVERRIDES anything specified here. If NO values are specified (here or in sfdx-project.json),
+      defaults to the current highest API version for the org.'
     required: false
     default: ''
 

@@ -55,7 +55,10 @@ fi
 
 # Check if API_VERSION was specified
 if [[ $API_VERSION != '' ]]; then
+  echo "INFO: API_VERSION $API_VERSION specified. will use that unless overridden by sfdx-project.json sourceApiVersion"
   API_VERSION="--api-version=$API_VERSION"
+else
+  echo "WARN: API_VERSION not specified. Will use sourceApiVersion from sfdx-project.json, or current latest API version if that is unavailable"
 fi
 
 # Deploy diff
