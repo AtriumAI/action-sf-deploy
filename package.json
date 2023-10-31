@@ -1,0 +1,14 @@
+{
+  "name": "action-sf-cicd",
+  "version": "1.0.0",
+  "description": "This is a github action to assist in automating Salesforce deployment. It leverages sfdx and [sfpowerkit](https://github.com/dxatscale/sfpowerkit) to enable 2 main workflows:\r 1. Validate potential changes against a CI sandbox when a pull request is created or updated.\r 2. Automatically deploy changes to a CI sandbox when a pull request is merged.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sf": "sf"
+ 
+  },
+  "private": true,
+  "dependencies": {
+    "@salesforce/cli": "^2.14.6"
+  }
+}
