@@ -21,7 +21,7 @@ echo "sf sgd source delta --to "HEAD" --from "HEAD^" --output diffdeploy/ --gene
 # Prepare diff
 rm -rf diffdeploy
 mkdir diffdeploy
-sf sgd source delta --to "HEAD" --from "HEAD^" --output diffdeploy/ --generate-delta --source force-app/
+sf sgd source delta --to $REVISION_TO --from $REVISION_FROM --output diffdeploy/ --generate-delta --source force-app/
 
 # Set Validate_only flag
 VALIDATE_ONLY=`echo $VALIDATE_ONLY | tr '[:upper:]' '[:lower:]'`
