@@ -45,18 +45,22 @@ runs:
     
     # Checkout NPM
     - name: Setup Node
+      id: npm-setup
       uses: actions/setup-node@v4
       with:
-        node-version: 'latest'
+        node-version: '20'
         cache: 'npm'
 
     # Install dependencies
     - name: Install Dependencies
+      # if: steps.npm-setup.outputs.cache-hit != 'true'
       run: npm ci
-    
+      shell: bash
+
     # Add NPM modules to the path
     - name: Update GITHUB_PATH
       run: echo "$(pwd)/node_modules/.bin" >> $GITHUB_PATH
+      shell: bash
 
     - run: ${{ github.action_path }}/sfdx-cicd.sh
       shell: bash
