@@ -17,7 +17,7 @@ echo $SFDX_AUTH_URL > sfdx_auth.txt
 sf org login sfdx-url --sfdx-url-file sfdx_auth.txt --set-default --alias SFOrg
 rm sfdx_auth.txt
 
-echo "sf sgd source delta --to "HEAD" --from "HEAD^" --output diffdeploy/ --generate-delta --source force-app/"
+echo "sf sgd source delta --to $REVISION_TO --from $REVISION_FROM --output diffdeploy/ --generate-delta --source force-app/"
 # Prepare diff
 rm -rf diffdeploy
 mkdir diffdeploy
