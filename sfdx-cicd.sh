@@ -1,11 +1,11 @@
 #!/bin/bash
 set -o errexit -o pipefail -o noclobber -o nounset
-export PATH=($pwd)/node_modules/.bin:$PATH
+export PATH=$(pwd)/node_modules/.bin:$PATH
+sf version
 
-# Install sfpowerkit (only if missing)
-if [[ -z $(sf plugins | grep sfpowerkit) ]]; then
-  echo 'y' | sf plugins install sfpowerkit
-fi
+# Ensure we're linked to sfdx-git-delta
+sf plugins link node_modules/sfdx-git-delta
+sf plugins
 
 # Set logging level
 SF_LOG_LEVEL='fatal'
@@ -17,9 +17,11 @@ echo $SFDX_AUTH_URL > sfdx_auth.txt
 sf org login sfdx-url --sfdx-url-file sfdx_auth.txt --set-default --alias SFOrg
 rm sfdx_auth.txt
 
-echo "sfdx diff command: sf sfpowerkit project diff -r $REVISION_FROM -t $REVISION_TO -d diffdeploy"
+echo "sf sgd source delta --to $REVISION_TO --from $REVISION_FROM --output diffdeploy/ --generate-delta --source force-app/"
 # Prepare diff
-sf sfpowerkit project diff -r $REVISION_FROM -t $REVISION_TO -d diffdeploy
+rm -rf diffdeploy
+mkdir diffdeploy
+sf sgd source delta --to $REVISION_TO --from $REVISION_FROM --output diffdeploy/ --generate-delta --source force-app/
 
 # Set Validate_only flag
 VALIDATE_ONLY=`echo $VALIDATE_ONLY | tr '[:upper:]' '[:lower:]'`

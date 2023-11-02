@@ -5,10 +5,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "sf": "sf"
- 
   },
   "private": true,
   "dependencies": {
-    "@salesforce/cli": "^2.14.6"
+    "@salesforce/cli": "2.16.7",
+    "sfdx-git-delta": "5.27.0"
   }
 }
+ 
