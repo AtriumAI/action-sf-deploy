@@ -7,8 +7,8 @@ sf version
 sf plugins link node_modules/sfdx-git-delta
 sf plugins
 
-# Set logging level
-SF_LOG_LEVEL='fatal'
+# Set the default logging level
+SF_LOG_LEVEL='info'
 
 # Auth sfdx into org with auth url
 # Generate this with:
@@ -17,11 +17,38 @@ echo $SFDX_AUTH_URL > sfdx_auth.txt
 sf org login sfdx-url --sfdx-url-file sfdx_auth.txt --set-default --alias SFOrg
 rm sfdx_auth.txt
 
-echo "sf sgd source delta --to $REVISION_TO --from $REVISION_FROM --output diffdeploy/ --generate-delta --source force-app/"
+echo "Diff creation command: sf sgd source delta --to $REVISION_TO --from $REVISION_FROM --output diffdeploy/ --generate-delta --source force-app/"
 # Prepare diff
 rm -rf diffdeploy
 mkdir diffdeploy
 sf sgd source delta --to $REVISION_TO --from $REVISION_FROM --output diffdeploy/ --generate-delta --source force-app/
+
+# If debugging, output the delta file system and package.xml
+if [[ $DEBUG_LOGGING = true ]]; then
+  # Raise logging level
+  SF_LOG_LEVEL='debug'
+
+  # Output the directory tree
+  echo "Diff directory contents:"
+  echo "------------------------"
+  ls -lR diffdeploy/
+  echo ""
+
+  # Output the package.xml
+  echo "Package.xml contents:"
+  echo "------------------------"
+  cat diffdeploy/package/package.xml
+  echo ""
+  
+  # Also display the destructive changes package.xml if it exists
+  if test -f diffdeploy/destructivechanges/package.xml; then
+    echo ""
+    echo "Destructive changes xml:"
+    echo "------------------------"
+    cat diffdeploy/destructivechanges/package.xml
+    echo ""
+  fi
+fi
 
 # Set Validate_only flag
 VALIDATE_ONLY=`echo $VALIDATE_ONLY | tr '[:upper:]' '[:lower:]'`
