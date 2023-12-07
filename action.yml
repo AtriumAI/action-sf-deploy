@@ -34,6 +34,10 @@ inputs:
       defaults to the current highest API version for the org.'
     required: false
     default: ''
+  debug-logging:
+    description: 'If set to true, causes significantly more logging to be output during the process'
+    required: true
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -72,3 +76,4 @@ runs:
         REVISION_FROM: ${{ inputs.revision-from }}
         REVISION_TO: ${{ inputs.revision-to }}
         API_VERSION: ${{ inputs.api-version }}
+        DEBUG_LOGGING: ${{ inputs.debug-logging }}
