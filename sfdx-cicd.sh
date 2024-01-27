@@ -41,11 +41,15 @@ if [[ $DEBUG_LOGGING = true ]]; then
   echo ""
   
   # Also display the destructive changes package.xml if it exists
-  if test -f diffdeploy/destructivechanges/package.xml; then
+  if test -f diffdeploy/destructiveChanges/package.xml; then
     echo ""
-    echo "Destructive changes xml:"
+    echo "Destructive changes package.xml:"
     echo "------------------------"
-    cat diffdeploy/destructivechanges/package.xml
+    cat diffdeploy/destructiveChanges/package.xml
+    echo ""
+    echo "Destructive changes destructiveChanges.xml:"
+    echo "------------------------"
+    cat diffdeploy/destructiveChanges/destructiveChanges.xml
     echo ""
   fi
 fi
