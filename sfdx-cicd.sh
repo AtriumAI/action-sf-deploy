@@ -97,3 +97,16 @@ fi
 # Deploy diff
 echo "sfdx deploy command: sf project deploy start --source-dir diffdeploy/force-app --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION"
 sf project deploy start --source-dir diffdeploy/force-app --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION
+
+# Deploy destructive changes (if they exist)
+# Check the destructiveChanges.xml for actual removes
+# Check if file exists
+if test -f diffdeploy/destructiveChanges/package.xml; then
+    # Search for the string in the file
+    if grep -q Type diffdeploy/destructiveChanges/package.xml; then
+      echo "Destructive changes deploy command: sf project deploy start --manifest diffdeploy/destructiveChanges/package.xml --post-destructive-changes diffdeploy/destructiveChanges/destructiveChanges.xml --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION"
+      sf project deploy start --manifest diffdeploy/destructiveChanges/package.xml --post-destructive-changes diffdeploy/destructiveChanges/destructiveChanges.xml --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION
+    else
+      echo "No destructive changes to deploy."
+    fi
+fi
