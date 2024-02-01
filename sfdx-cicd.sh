@@ -119,26 +119,3 @@ fi
 echo "Deploy command: sf project deploy start --manifest $MANIFEST $DESTRUCTIVE_CHANGES --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION"
 sf project deploy start --manifest $MANIFEST $DESTRUCTIVE_CHANGES --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION
 
-# Deploy diff if any non-destructive changes exist
-# Check the package.xml for actual code to deploy
-#if test -f diffdeploy/package/package.xml; then
-#    # Search for the string in the file
-#    if grep -q "<types>" diffdeploy/package/package.xml; then
-#      echo "sfdx deploy command: sf project deploy start --source-dir diffdeploy/force-app --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION"
-#      sf project deploy start --source-dir diffdeploy/force-app --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION
-#    else
-#      echo "No constructive changes to deploy."
-#    fi
-#fi
-
-# Deploy destructive changes (if they exist)
-# Check the destructiveChanges.xml for actual removes
-#if test -f diffdeploy/destructiveChanges/destructiveChanges.xml; then
-#    # Search for the string in the file
-#    if grep -q "<types>" diffdeploy/destructiveChanges/destructiveChanges.xml; then
-#      echo "Destructive changes deploy command: sf project deploy start --manifest diffdeploy/destructiveChanges/package.xml --post-destructive-changes diffdeploy/destructiveChanges/destructiveChanges.xml --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION"
-#      sf project deploy start --manifest diffdeploy/package/package.xml --post-destructive-changes diffdeploy/destructiveChanges/destructiveChanges.xml --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION
-#    else
-#      echo "No destructive changes to deploy."
-#    fi
-#fi
