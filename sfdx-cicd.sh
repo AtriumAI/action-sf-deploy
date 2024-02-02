@@ -94,6 +94,28 @@ else
   echo "WARN: API_VERSION not specified. Will use sourceApiVersion from sfdx-project.json, or current latest API version if that is unavailable"
 fi
 
-# Deploy diff
-echo "sfdx deploy command: sf project deploy start --source-dir diffdeploy/force-app --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION"
-sf project deploy start --source-dir diffdeploy/force-app --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION
+# Check the package.xml for actual code to deploy
+if test -f diffdeploy/package/package.xml; then
+    # Search for the string in the file
+    if grep -q "<types>" diffdeploy/package/package.xml; then
+      MANIFEST='diffdeploy/package/package.xml'
+    else
+      echo "No constructive changes to deploy."
+      MANIFEST="diffdeploy/destructiveChanges/package.xml"
+    fi
+fi
+
+# Check the destructiveChanges.xml for actual removes
+if test -f diffdeploy/destructiveChanges/destructiveChanges.xml; then
+    # Search for the string in the file
+    if grep -q "<types>" diffdeploy/destructiveChanges/destructiveChanges.xml; then
+      DESTRUCTIVE_CHANGES="--post-destructive-changes diffdeploy/destructiveChanges/destructiveChanges.xml"
+    else
+      echo "No destructive changes to deploy."
+      DESTRUCTIVE_CHANGES=''
+    fi
+fi
+
+echo "Deploy command: sf project deploy start --manifest $MANIFEST $DESTRUCTIVE_CHANGES --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION"
+sf project deploy start --manifest $MANIFEST $DESTRUCTIVE_CHANGES --target-org SFOrg --json $VALIDATE_FLAG $TEST_LEVEL $SPECIFIED_TESTS $API_VERSION
+
