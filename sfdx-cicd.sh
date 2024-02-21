@@ -79,7 +79,7 @@ else
 fi
 
 # If RunSpecifiedTests Test_Level, parse the tests requested
-SPECIFIED_TESTS=`echo $SPECIFIED_TESTS | tr -d ' '`
+SPECIFIED_TESTS=`echo $SPECIFIED_TESTS | tr -s ',' ' '`
 if [[ $TEST_LEVEL = '--test-level RunSpecifiedTests' ]]; then
   SPECIFIED_TESTS="--tests $SPECIFIED_TESTS"
 else
