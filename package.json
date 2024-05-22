@@ -8,7 +8,7 @@
   },
   "private": true,
   "dependencies": {
-    "@salesforce/cli": "2.16.7",
+    "@salesforce/cli": "2.41.8",
     "sfdx-git-delta": "5.27.0"
   }
 }
